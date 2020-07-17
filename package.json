@@ -1,0 +1,18 @@
+{
+  "name": "3d_viewer",
+  "version": "0.1",
+  "description": "AIDA 3D WSI image viewer prototype",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel index.html"
+  },
+  "author": "Alan Aberdeen",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "three": "^0.118.3"
+  }
+}
