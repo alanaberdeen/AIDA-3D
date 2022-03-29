@@ -44,7 +44,7 @@ const Demo = () => {
 	return (
 		<>
 			<Head>
-				<title>Demo - AIDA</title>
+				<title>Demo - AIDA 3D</title>
 			</Head>
 			<Viewer
 				imageUrl={imageUrl}
