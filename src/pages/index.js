@@ -28,7 +28,7 @@ export default function Home() {
 	return (
 		<div>
 			<Head>
-				<title>Annotate Image Data by Assignment - AIDA</title>
+				<title>Annotate Image Data by Assignment - AIDA 3D</title>
 			</Head>
 
 			<header className="pt-8 overflow-hidden sm:pt-12 lg:relative lg:py-48">
@@ -37,31 +37,20 @@ export default function Home() {
 						<div className="mt-12">
 							<div className="mt-6 sm:max-w-xl">
 								<h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
-									Easily annotate high-resolution images in your browser.
+									Explore 2D and 3D histology images with side-by-side interaction
 								</h1>
 
 								{/* Stats */}
 								<div className="mt-6 text-gray-500 flex items-center">
-									{/* Github stars */}
-									<StarIcon className="h-4 w-4 mr-1" aria-hidden="true" />
-									{stars}
-									{/* Github forks */}
-									<svg className="w-4 h-4 ml-8 mr-1" viewBox="0 0 24 24">
-										<path
-											fill="currentColor"
-											d="M6,2A3,3 0 0,1 9,5C9,6.28 8.19,7.38 7.06,7.81C7.15,8.27 7.39,8.83 8,9.63C9,10.92 11,12.83 12,14.17C13,12.83 15,10.92 16,9.63C16.61,8.83 16.85,8.27 16.94,7.81C15.81,7.38 15,6.28 15,5A3,3 0 0,1 18,2A3,3 0 0,1 21,5C21,6.32 20.14,7.45 18.95,7.85C18.87,8.37 18.64,9 18,9.83C17,11.17 15,13.08 14,14.38C13.39,15.17 13.15,15.73 13.06,16.19C14.19,16.62 15,17.72 15,19A3,3 0 0,1 12,22A3,3 0 0,1 9,19C9,17.72 9.81,16.62 10.94,16.19C10.85,15.73 10.61,15.17 10,14.38C9,13.08 7,11.17 6,9.83C5.36,9 5.13,8.37 5.05,7.85C3.86,7.45 3,6.32 3,5A3,3 0 0,1 6,2M6,4A1,1 0 0,0 5,5A1,1 0 0,0 6,6A1,1 0 0,0 7,5A1,1 0 0,0 6,4M18,4A1,1 0 0,0 17,5A1,1 0 0,0 18,6A1,1 0 0,0 19,5A1,1 0 0,0 18,4M12,18A1,1 0 0,0 11,19A1,1 0 0,0 12,20A1,1 0 0,0 13,19A1,1 0 0,0 12,18Z"
-										/>
-									</svg>
-									{forks}
 									{/* License */}
-									<ScaleIcon className="h-4 w-4 mr-2 ml-8" aria-hidden="true" />
+									<ScaleIcon className="h-4 w-4 mr-2" aria-hidden="true" />
 									MIT License
 								</div>
 
 								<p className="mt-6 text-xl text-gray-500">
 									An{' '}
 									<a
-										href="https://github.com/alanaberdeen/AIDA"
+										href="https://github.com/alanaberdeen/AIDA-3D"
 										className="hover:underline mx-1"
 										target="_blank"
 										rel="noreferrer"
@@ -77,9 +66,7 @@ export default function Home() {
 											/>
 										</svg>
 									</a>{' '}
-									web-based annotation tool built for huge deep-zoom images
-									&#8211; add image annotation and model review to your
-									workflow.
+									web-based annotation tool built for exploring huge deep-zoom histology images alongside 3D segmentation.
 								</p>
 							</div>
 
@@ -163,62 +150,46 @@ export default function Home() {
 				<div className="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl mm:pt-16">
 					<div className="max-w-prose">
 						<h2 className="text-2xl text-gray-900 font-semibold tracking-tight sm:text-3xl">
-							The basic idea
+							What is AIDA?
 						</h2>
 						<div className="mt-4 text-gray-600 space-y-6 text-base leading-relaxed">
 							<p>
-								AIDA brings an open source web-based work-flow to image
-								annotation.
+							AIDA is an attempt to bring an open source web-based work-flow to image annotation.
 							</p>
 							<p>
-								Currently, in the biomedical imaging space, image annotation is
-								largely confined to shrink-wrapped software on a single computer
-								with limited interactive capabilities and few, usually closed,
-								data formats.
+							AIDA is a web interface that enables distributed teams of researchers to directly annotate images with easy to use on screen drawing tools. AIDA supports the creation of well defined annotation trials which include a series of high resolution images and a specific set of annotation tasks.
 							</p>
 							<p>
-								AIDA is a web interface that enables distributed teams of
-								researchers to directly annotate images with easy to use on
-								screen drawing tools. AIDA supports the creation of well defined
-								annotation protocols which include a series of images and a
-								specific set of annotation tasks.
+							For documentation and further information see the <a className="text-teal-600 hover:underline" href="https://github.com/alanaberdeen/AIDA">AIDA repository</a>.
 							</p>
 						</div>
 					</div>
 
 					<div className="max-w-prose mt-20">
 						<h2 className="text-2xl text-gray-900 font-semibold tracking-tight sm:text-3xl">
-							How has it been implemented?
+							What is AIDA-3D?
 						</h2>
 						<div className="mt-4 text-gray-600 space-y-6 text-base leading-relaxed">
 							<p>
-								The user interface is a React Single Page Application built on
-								the NextJS framework. The application uses OpenLayers to
-								manipulate and annotate high resolution deep-zoom images.
+							AIDA-3D combines the 2D viewer from AIDA with a corresponding 3D viewer for semantic segmentation of tiled regions.
 							</p>
 						</div>
 					</div>
 
 					<div className="max-w-prose mt-20">
 						<h2 className="text-2xl text-gray-900 font-semibold tracking-tight sm:text-3xl">
-							What&apos;s planned?
+							License
 						</h2>
 						<div className="mt-4 text-gray-600 space-y-6 text-base leading-relaxed">
 							<p>
 								The software is published as Open Source under the permissive{' '}
 								<a
 									className="text-teal-600 hover:underline"
-									href="https://github.com/alanaberdeen/AIDA/blob/master/LICENSE"
+									href="https://github.com/alanaberdeen/AIDA-3D/blob/master/LICENSE"
 								>
 									MIT license
 								</a>
 								.
-							</p>
-							<p>
-								The next stage of development will be to integrate intelligent
-								tools that leverage the power of machine learning techniques. We
-								hope to enhance the ability of the user to quickly and
-								accurately mark up images through predictive assistance.
 							</p>
 						</div>
 					</div>
@@ -236,22 +207,21 @@ export default function Home() {
 								>
 									Alan Aberdeen
 								</a>{' '}
-								with contributions from{' '}
+								with the support of {' '}
 								<a
 									className="text-teal-600 hover:underline"
-									href="https://github.com/stefano-malacrino"
+									href="https://www.nih.gov/about-nih/what-we-do/nih-almanac/national-cancer-institute-nci"
 								>
-									Stefano Malacrino
+									NCI at NIH
 								</a>
-								, Nasullah Khalid Alham and{' '}
+								{' '}and the{' '}
 								<a
 									className="text-teal-600 hover:underline"
-									href="https://github.com/rcasero"
+									href="http://www.ludwig.ox.ac.uk/jens-rittscher-group-page"
 								>
-									Ramón Casero
+									Quantitative Biological Imaging Group
 								</a>
-								. It originated at the Quantitative Biological Imaging Group,
-								The University of Oxford.
+								{' '}at The University of Oxford.
 							</p>
 						</div>
 					</div>
