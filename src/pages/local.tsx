@@ -15,11 +15,9 @@ export default function Local() {
 	useEffect(() => {
 		;(async () => {
 			try {
-				// Default port for localServer is 8000
+				// Default port for local image server is 8000
 				// Checking by ping... perhaps not the best way?
-				// TODO: handle the case the server is running on a remote machine
-				//       and being accessed over the local network.
-				await fetch('http://localhost:8000/ping')
+				await fetch(`http://${window.location.hostname}:8000/ping`)
 				setIsLoading(false)
 				setServerIsActive(true)
 			} catch (error) {

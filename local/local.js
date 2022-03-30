@@ -17,6 +17,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const fs_1 = __importDefault(require("fs"));
 const fsp = fs_1.default.promises;
 const path_1 = __importDefault(require("path"));
+const ip_1 = __importDefault(require("ip"));
 const ini_1 = __importDefault(require("ini"));
 // Read configuration file
 const config = ini_1.default.parse(fs_1.default.readFileSync(path_1.default.join(__dirname, 'config.ini'), 'utf-8'));
@@ -142,7 +143,8 @@ function startServer() {
         });
         // Listen to requests
         app.listen(port, () => {
-            console.log('AIDA running:');
+            console.log('AIDA-3D running:');
+            console.log(`Also available on the local network at: http://${ip_1.default.address()}:3000`);
         });
     });
 }

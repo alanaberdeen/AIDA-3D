@@ -23,7 +23,10 @@ export default function Home() {
 	// });
 
 	const [isLocalhost, setIsLocalhost] = useState(false)
-	useEffect(() => setIsLocalhost(window.location.hostname === 'localhost'), [])
+	useEffect(() => setIsLocalhost(
+		window.location.hostname === 'localhost' ||
+		window.location.hostname.startsWith('192')
+	), [])
 
 	return (
 		<div>

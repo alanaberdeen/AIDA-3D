@@ -36,8 +36,8 @@ const defaultAnnotation: Annotation = {
 	],
 }
 
-const defaultDataHost = 'http://localhost:8000/data'
-const IIIFHost = 'http://localhost:8182/iiif/2'
+const defaultDataHost = `http://${window.location.hostname}:8000/data`
+const IIIFHost = `http://${window.location.hostname}:8182/iiif/2`
 
 const AIDA = () => {
 	const router = useRouter()

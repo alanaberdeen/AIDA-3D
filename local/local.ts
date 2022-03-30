@@ -147,7 +147,8 @@ async function startServer() {
 
 	// Listen to requests
 	app.listen(port, () => {
-		console.log('AIDA running:')
+		console.log('AIDA-3D running:')
+		console.log(`Also available on the local network at: http://${ip.address()}:3000`)
 	})
 }
 

@@ -17,8 +17,8 @@ interface Node {
 // API call to local server to check for images and projects at a specific path
 const getItemsAtPath = async (path: string) => {
 	try {
-		// Default port for localServer is 8000
-		const host = 'http://localhost:8000'
+		// Default port for local image server is 8000
+		const host = `http://${window.location.hostname}:8000`
 
 		const res = await fetch(`${host}/getItemsAtPath`, {
 			method: 'POST',
