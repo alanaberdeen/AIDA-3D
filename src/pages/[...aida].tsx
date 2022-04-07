@@ -36,9 +36,6 @@ const defaultAnnotation: Annotation = {
 	],
 }
 
-const defaultDataHost = `http://${window.location.hostname}:8000/data`
-const IIIFHost = `http://${window.location.hostname}:8182/iiif/2`
-
 const AIDA = () => {
 	const router = useRouter()
 	const { asPath, query } = router
@@ -60,6 +57,9 @@ const AIDA = () => {
 	useEffect(() => {
 		;(async () => {
 			if (router.isReady) {
+				const defaultDataHost = `http://${window.location.hostname}:8000/data`
+				const IIIFHost = `http://${window.location.hostname}:8182/iiif/2`
+
 				// We assume if the path ends in .json then we are loading an AIDA
 				// project which specific image and annotation path as object properties.
 				if (asPath.endsWith('.json')) {
