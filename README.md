@@ -27,12 +27,13 @@ The software is published as Open Source under the permissive [MIT license](http
 You can use AIDA-3D on your local machine. The only requirement [NodeJS](https://nodejs.org/en/).
 
 1. Clone the repository
-2. Install the dependencies via [NPM](https://www.npmjs.com/) `npm install`
-3. Run the build script `npm run build`
-4. Add the images and their corresponding 3D segmentation to the `/local/data/` directory.
-5. Create a .json config file in the `/local/data/` directory with two properties 'image' the local path to the 2D image and 'tiles' the local path to the 3D segmentation.
-6. Run the local server application via `npm run start`
-7. Navigate to the localhost webserver specified in the console
+2. [optional] edit the aida.config.js file at project root to specify a path to your image data.
+3. Install the dependencies via [NPM](https://www.npmjs.com/) `npm install`
+4. Run the build script `npm run build`
+5. Add the images and their corresponding 3D segmentation to the `/local/data/` directory.
+6. Create a .json project file in the `/local/data/` directory with two properties 'image' the local path to the 2D image and 'tiles' the local path to the 3D segmentation.
+7. Run the local server application via `npm run start`
+8. Navigate to the localhost webserver specified in the console
 
 ## Develop
 
