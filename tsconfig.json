@@ -25,7 +25,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "local_server",
     "node_modules"
   ]
 }
