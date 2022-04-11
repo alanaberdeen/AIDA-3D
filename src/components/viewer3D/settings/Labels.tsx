@@ -146,7 +146,11 @@ const Labels = (props) => {
 								disabled={selected.length === 0}
 							>
 								{Array.from(existingLabels).map((label, index) => {
-									return <Item key={index} textValue={label}>{label}</Item>
+									return (
+										<Item key={index} textValue={label}>
+											{label}
+										</Item>
+									)
 								})}
 							</InputAutoComplete>
 						</div>

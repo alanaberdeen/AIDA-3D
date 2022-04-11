@@ -85,7 +85,6 @@ const AIDA = () => {
 
 						// Extract tiles
 						setTilesUrl(`${defaultDataHost}/${projectResponseJson.tiles}`)
-
 					}
 				}
 				setIsLoading(false)

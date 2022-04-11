@@ -32,7 +32,14 @@ const Viewer = (props: {
 	setPolygonCoords: (coords: [number, number][]) => void
 	select3D: boolean
 }) => {
-	const { imageUrl, annotationData, imageExt, setTile, setPolygonCoords, select3D} = props
+	const {
+		imageUrl,
+		annotationData,
+		imageExt,
+		setTile,
+		setPolygonCoords,
+		select3D,
+	} = props
 
 	const [map, setMap] = useState<Map>()
 
@@ -262,7 +269,14 @@ const Viewer = (props: {
 	return (
 		<div className="min-w-full min-h-screen flex bg-gray-100">
 			{/* Toolbar */}
-			{map && <Toolbar map={map} setTile={setTile} setPolygonCoords={setPolygonCoords} select3D={select3D}/>}
+			{map && (
+				<Toolbar
+					map={map}
+					setTile={setTile}
+					setPolygonCoords={setPolygonCoords}
+					select3D={select3D}
+				/>
+			)}
 
 			{/* Image view */}
 			{map && <MapView map={map} />}

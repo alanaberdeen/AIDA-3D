@@ -26,16 +26,18 @@ export default function Settings(props: {
 	return (
 		<>
 			{/* Open button */}
-			{!isOpen && <button
-				onClick={() => {
-					setIsOpen(true)
-					resizeRendererToDisplaySize(renderer)
-				}}
-				className="rounded-bl-md hover:bg-gray-100 border-gray-200 shadow p-2 bg-white absolute top-0 right-0 inline-flex items-center text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
-			>
-				<ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-				Settings
-			</button>}
+			{!isOpen && (
+				<button
+					onClick={() => {
+						setIsOpen(true)
+						resizeRendererToDisplaySize(renderer)
+					}}
+					className="rounded-bl-md hover:bg-gray-100 border-gray-200 shadow p-2 bg-white absolute top-0 right-0 inline-flex items-center text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+				>
+					<ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+					Settings
+				</button>
+			)}
 
 			{/* Content */}
 			{isOpen && (

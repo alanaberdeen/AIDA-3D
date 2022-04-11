@@ -19,4 +19,3 @@ export const resizeRendererToDisplaySize = (renderer: WebGLRenderer) => {
 	}
 	return needResize
 }
-

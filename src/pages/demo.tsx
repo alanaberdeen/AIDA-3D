@@ -40,7 +40,6 @@ const Demo = () => {
 
 	const tilesUrl = `https://storage.googleapis.com/gtl-study-1ase6a/images/qpkecO/3d/tiles`
 
-
 	return (
 		<>
 			<Head>

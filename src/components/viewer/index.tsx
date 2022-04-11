@@ -12,11 +12,11 @@ const Viewer = (props: {
 	annotationData: Annotation
 	tilesUrl: string
 }) => {
-	const { imageUrl, annotationData, imageExt, tilesUrl } = props;
+	const { imageUrl, annotationData, imageExt, tilesUrl } = props
 
 	const [tile, setTile] = useState<[number, number]>()
-  const [select3D, setSelect3D] = useState(null);
-	const [polygonCoords, setPolygonCoords] = useState(null);
+	const [select3D, setSelect3D] = useState(null)
+	const [polygonCoords, setPolygonCoords] = useState(null)
 
 	return (
 		<div className="min-w-full h-screen flex bg-gray-100">

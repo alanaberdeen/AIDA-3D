@@ -72,7 +72,7 @@ export function InputAutoComplete(props) {
 						ref={inputRef}
 						disabled={disabled}
 						className="pl-1 focus:outline-none focus:ring-teal-500 w-full focus:border-teal-500 min-width-0 border border-gray-300 rounded-l-md"
-						/>
+					/>
 				</div>
 
 				<button

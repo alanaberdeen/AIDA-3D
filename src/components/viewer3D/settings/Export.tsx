@@ -8,10 +8,7 @@ function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
 }
 
-const Export = (props: {
-	content: Group
-	renderer: WebGLRenderer
-}) => {
+const Export = (props: { content: Group; renderer: WebGLRenderer }) => {
 	const { content, renderer, featureData } = props
 
 	const [onlyVisible, setOnlyVisible] = useState(true)
@@ -29,7 +26,6 @@ const Export = (props: {
 			// Filter for clipping planes
 			nuclei = nuclei.filter((nucleus) => {
 				return renderer.clippingPlanes.every((clippingPlane) => {
-	
 					nucleus.geometry.computeBoundingSphere()
 					const centerPoint = nucleus.geometry.boundingSphere.center.clone()
 					const center = nucleus.localToWorld(centerPoint)
@@ -46,11 +42,13 @@ const Export = (props: {
 				(nucleus) => nucleus.material.emissive.getHexString() === 'ffffff'
 			)
 
-		// Extra nuclei indices from mesh names 
-		const nucleiIndices = nuclei.map((nucleus) => Number(nucleus.name.split('_')[1]))
+		// Extra nuclei indices from mesh names
+		const nucleiIndices = nuclei.map((nucleus) =>
+			Number(nucleus.name.split('_')[1])
+		)
 
 		// Filter feature data but the subset of nuclei indices we are interested in
-		const filteredFeatureData = {...featureData}
+		const filteredFeatureData = { ...featureData }
 		for (const feature of Object.keys(filteredFeatureData)) {
 			filteredFeatureData[feature] = nucleiIndices.map(
 				(index) => filteredFeatureData[feature][index]
@@ -66,7 +64,9 @@ const Export = (props: {
 			output = JSON.stringify(filteredFeatureData)
 		} else if (fileType === 'csv') {
 			// Header row
-			output = output.concat(Object.keys(filteredFeatureData).join(',')).concat('\n')
+			output = output
+				.concat(Object.keys(filteredFeatureData).join(','))
+				.concat('\n')
 
 			// Data rows
 			for (const index in nucleiIndices) {
@@ -86,8 +86,7 @@ const Export = (props: {
 		const element = document.createElement('a')
 		element.setAttribute(
 			'href',
-			'data:text/plain;charset=utf-8,' +
-				encodeURIComponent(output)
+			'data:text/plain;charset=utf-8,' + encodeURIComponent(output)
 		)
 		element.setAttribute('download', `aida-3D-export.${fileType}`)
 
