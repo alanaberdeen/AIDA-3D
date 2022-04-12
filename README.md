@@ -10,7 +10,7 @@ For documentation and further information see the [AIDA repository](https://gith
 
 ## What is AIDA-3D?
 
-AIDA-3D combines the 2D viewer from AIDA with a corresponding 3D viewer for semantic segmentation of tiled regions.
+AIDA-3D combines the 2D viewer from AIDA with a corresponding 3D viewer for semantic segmentation of tiled regions. [Play with a live demo](https://aida-3d.vercel.app/demo).
 
 ## How has it been implemented?
 
