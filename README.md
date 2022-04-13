@@ -1,5 +1,9 @@
 # AIDA 3D
 
+## What is AIDA-3D?
+
+AIDA-3D combines the 2D viewer from [AIDA](https://github.com/alanaberdeen/AIDA) with a corresponding 3D viewer for semantic segmentation of tiled regions. [Play with a live demo here](https://aida-3d.vercel.app/demo).
+
 ## What is AIDA
 
 AIDA is an attempt to bring an open source web-based work-flow to image annotation.
@@ -7,10 +11,6 @@ AIDA is an attempt to bring an open source web-based work-flow to image annotati
 AIDA is a web interface that enables distributed teams of researchers to directly annotate images with easy to use on screen drawing tools. AIDA supports the creation of well defined annotation trials which include a series of high resolution images and a specific set of annotation tasks.
 
 For documentation and further information see the [AIDA repository](https://github.com/alanaberdeen/AIDA).
-
-## What is AIDA-3D?
-
-AIDA-3D combines the 2D viewer from AIDA with a corresponding 3D viewer for semantic segmentation of tiled regions. [Play with a live demo](https://aida-3d.vercel.app/demo).
 
 ## How has it been implemented?
 
@@ -27,13 +27,56 @@ The software is published as Open Source under the permissive [MIT license](http
 You can use AIDA-3D on your local machine. The only requirement [NodeJS](https://nodejs.org/en/).
 
 1. Clone the repository
-2. [optional] edit the aida.config.js file at project root to specify a path to your image data.
+2. Edit the aida.config.js file at project root to specify a path to serve your image data from, the default is `/local/data/`. [optional] 
 3. Install the dependencies via [NPM](https://www.npmjs.com/) `npm install`
 4. Run the build script `npm run build`
-5. Add the images and their corresponding 3D segmentation to the `/local/data/` directory.
-6. Create a .json project file in the `/local/data/` directory with two properties 'image' the local path to the 2D image and 'tiles' the local path to the 3D segmentation.
+5. Add the images and their corresponding 3D segmentation to the data directory (default `/local/data/`), or to the alternative location if you specified an alternative in step 2.
+6. Create a .json project file in the data directory with two properties 'image' the local path to the 2D image and 'tiles' the local path to the 3D segmentation.
 7. Run the local server application via `npm run start`
-8. Navigate to the localhost webserver specified in the console
+8. Navigate to the localhost webserver specified in the console.
+
+## Example local sever data directory
+```
+local
+|  local.ts
+|  tsconfig.json
+|  ...
+|
+|  └──data
+|    | README.md
+|    | image.json             // AIDA project file (see below for example content)
+|    
+|    └──image-dz              // DeepZoom format 2D image
+|    |   |  image.dzi
+|    |   
+|    |   └──image_files
+|    |   |   
+|    |   |   └──0
+|    |   |      |  0_0.jpeg
+|    |   |      |  0_1.jpeg
+|    |   |      |  ...
+|    |   |
+|    |   |   └───1
+|    |   |      |  0_0.jpeg
+|    |   |      |  0_1.jpeg
+|    |   |      |  ...
+|    |   |
+|    |   |   └───...  
+|    |   
+|    └──image-tiles         // Segmentation tiles produced by the analysis pipeline. GLTF format.
+|        |  tile__H000_V000.tif__.bin
+|        |  tile__H000_V000.tif__.gltf
+|        |  tile__H000_V000.tif__.json
+|        |  ...
+```
+
+image.json defines the combination of 2D image and 3D segmentation tiles.
+```
+{
+  "image": "demo-dz/qpkecO.dzi",
+  "tiles": "demo-tiles"
+}
+```
 
 ## Develop
 
