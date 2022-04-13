@@ -41,3 +41,6 @@ yarn-error.log*
 # typescript build content
 tsconfig.tsbuildinfo
 /local/tsconfig.tsbuildinfo
+
+# Cache
+.cache/*
