@@ -73,8 +73,8 @@ local
 image.json defines the combination of 2D image and 3D segmentation tiles.
 ```
 {
-  "image": "demo-dz/qpkecO.dzi",
-  "tiles": "demo-tiles"
+  "image": "image-dz/image.dzi",
+  "tiles": "image-tiles"
 }
 ```
 
