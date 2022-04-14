@@ -9,6 +9,8 @@ type Person = {
 	name: string
 }
 
+// Placeholder example data
+// TODO: if we use this component this would ofc need updating.
 const people = [
 	{ id: 1, name: 'Wade Cooper' },
 	{ id: 2, name: 'Arlene Mccoy' },
@@ -40,8 +42,8 @@ export default function InputCombobox(props: {
 
 	// Add key listener to commit search on enter
 	useEffect(() => {
-		let handleKeyDown = (e) => {
-			if (e.keyCode === 13 && query.length > 0) {
+		let handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Enter' && query.length > 0) {
 				commitInput(query)
 				setQuery('')
 			}
