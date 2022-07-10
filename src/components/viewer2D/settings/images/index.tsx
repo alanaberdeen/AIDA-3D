@@ -5,59 +5,55 @@ import Map from 'ol/Map'
 
 import Layer from './Layer'
 import ActiveLayerControls from './ActiveLayerControls'
-import FooterToolbar from './FooterToolbar'
 
 // Types
-import type VectorLayer from 'ol/layer/Vector'
-import type VectorSource from 'ol/source/Vector'
-import type Geometry from 'ol/geom/Geometry'
+import Zoomify from 'ol/source/Zoomify'
+import TileLayer from 'ol/layer/Tile'
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ')
 }
 
-// Manage annotation layers, make adjustments such as opacity, etc.
-const Layers = (props: { map: Map }) => {
+// Manage images, make adjustments such as opacity, etc.
+const Images = (props: { map: Map }) => {
 	const { map } = props
 
-	const [layers, setLayers] = useState<VectorLayer<VectorSource<Geometry>>[]>(
-		[]
-	)
-	const [activeLayer, setActiveLayer] = useState(
-		map.getLayers().get('activeLayer').layer
+	const [images, setImages] = useState<TileLayer<Zoomify>[]>([])
+	const [activeImage, setActiveImage] = useState(
+		map.getLayers().get('activeImage').image
 	)
 
-	// Get annotation layers from map
+	// Get image layers from map
 	useEffect(() => {
 		const layers = map.getLayers()
 
 		// TODO: fix type
-		const annotationLayers: any[] = layers
+		const imageLayers: any[] = layers
 			.getArray()
-			.filter((layer) => layer.get('type') === 'annotation')
-		setLayers(annotationLayers)
+			.filter((layer) => layer.get('type') === 'image')
+		setImages(imageLayers)
 
-		// Set active layer, add listener to update active layer on change
-		setActiveLayer(layers.get('activeLayer').layer)
-		const onActiveLayerChange = () => {
-			setActiveLayer(layers.get('activeLayer').layer)
+		// Set active image, add listener to update active layer on change
+		setActiveImage(layers.get('activeImage').image)
+		const onActiveImageChange = () => {
+			setActiveImage(layers.get('activeImage').image)
 		}
-		layers.on('propertychange', onActiveLayerChange)
+		layers.on('propertychange', onActiveImageChange)
 
-		// Add a listener to update layers state when collection changes
+		// Add a listener to update images state when collection changes
 		const onLayersLengthChange = () => {
-			const annotationLayers: any[] = layers
+			const images: any[] = layers
 				.getArray()
-				.filter((layer) => layer.get('type') === 'annotation')
-			setLayers(annotationLayers)
+				.filter((layer) => layer.get('type') === 'image')
+			setImages(images)
 
 			// Update active layer (to the layer above) if the currently active layer
 			// was deleted and therefore is no longer in the collection. Without this
 			// new features will still be applied to the old layer and not visible.
-			if (!layers.getArray().includes(activeLayer)) {
-				const index = layers.get('activeLayer').index
+			if (!layers.getArray().includes(activeImage)) {
+				const index = layers.get('activeImage').index
 				const newActiveLayer = layers.item(index)
-				layers.set('activeLayer', { layer: newActiveLayer, index: index })
+				layers.set('activeImage', { layer: newActiveLayer, index: index })
 			}
 		}
 		layers.on('change:length', onLayersLengthChange)
@@ -65,9 +61,9 @@ const Layers = (props: { map: Map }) => {
 		// Return a cleanup function to remove the listeners on component unmount
 		return () => {
 			layers.un('change:length', onLayersLengthChange)
-			layers.un('propertychange', onActiveLayerChange)
+			layers.un('propertychange', onActiveImageChange)
 		}
-	}, [map, activeLayer])
+	}, [map, activeImage])
 
 	return (
 		<Disclosure className="shadow-sm" as="div">
@@ -88,11 +84,11 @@ const Layers = (props: { map: Map }) => {
 						>
 							<path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
 						</svg>
-						Layers
+						Images
 					</Disclosure.Button>
 					<Disclosure.Panel className="bg-white rounded-b-sm">
-						{/* Active layer tab controls */}
-						{activeLayer && <ActiveLayerControls activeLayer={activeLayer} />}
+						{/* Active image tab controls */}
+						{activeImage && <ActiveLayerControls activeLayer={activeImage} />}
 
 						{/* Layers list */}
 
@@ -102,19 +98,16 @@ const Layers = (props: { map: Map }) => {
                     so the user can see the active layer in the list by default.
             */}
 						<div className="max-h-40 overflow-y-auto">
-							{layers.map((layer, index) => (
+							{images.map((layer, index) => (
 								<Layer
 									key={index}
 									layer={layer}
 									index={index}
-									active={activeLayer === layer}
+									active={activeImage === layer}
 									map={map}
 								/>
 							))}
 						</div>
-
-						{/* Footer toolbar */}
-						<FooterToolbar map={map} />
 					</Disclosure.Panel>
 				</>
 			)}
@@ -122,4 +115,4 @@ const Layers = (props: { map: Map }) => {
 	)
 }
 
-export default Layers
+export default Images

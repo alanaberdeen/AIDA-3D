@@ -25,21 +25,14 @@ import Settings from './settings'
 import { Annotation } from '../../types/annotation'
 
 const Viewer = (props: {
-	imageUrl: string
-	imageExt: string
+	imageUrls: string[]
 	annotationData: Annotation
 	setTile: (tile: [number, number]) => void
 	setPolygonCoords: (coords: [number, number][]) => void
 	select3D: boolean
 }) => {
-	const {
-		imageUrl,
-		annotationData,
-		imageExt,
-		setTile,
-		setPolygonCoords,
-		select3D,
-	} = props
+	const { imageUrls, annotationData, setTile, setPolygonCoords, select3D } =
+		props
 
 	const [map, setMap] = useState<Map>()
 
@@ -55,15 +48,19 @@ const Viewer = (props: {
 			let imageWidth = 0
 			let imageHeight = 0
 
+			const baseImageUrl = imageUrls[0]
+			const baseImageExt = baseImageUrl.split('.').pop()
+			const baseImageName = baseImageUrl.split('/').pop()
+
 			// IMAGE LAYER -----------------------------------------------------------
-			if (imageExt === 'dzi') {
-				const response = await fetch(imageUrl)
+			if (baseImageExt === 'dzi') {
+				const response = await fetch(baseImageUrl)
 				const dzi = await parseDzi(await response.text())
 
 				imageHeight = dzi.size.height
 				imageWidth = dzi.size.width
 
-				const baseUrl = imageUrl.substring(0, imageUrl.lastIndexOf('.'))
+				const baseUrl = baseImageUrl.substring(0, baseImageUrl.lastIndexOf('.'))
 				const templateUrl = `${baseUrl}_files/{z}/{x}_{y}.${dzi.format}`
 				const tileSource = new Zoomify({
 					url: templateUrl,
@@ -89,11 +86,13 @@ const Viewer = (props: {
 				})
 
 				const tileLayer = new TileLayer({ source: tileSource })
-				tileLayer.set('id', 'image')
+				tileLayer.set('id', baseImageName)
 				tileLayer.set('type', 'image')
 				map.addLayer(tileLayer)
 
-				// VIEW ------------------------------------------------------------------
+				map.getLayers().set('activeImage', { image: tileLayer, index: 0 })
+
+				// VIEW ----------------------------------------------------------------
 				const view = new View({
 					resolutions: tileSource.getTileGrid().getResolutions(),
 					extent: tileSource.getTileGrid().getExtent(),
@@ -106,7 +105,7 @@ const Viewer = (props: {
 			// Likely .tiff.
 			else {
 				// Fetch info.json
-				const infoResponse = await fetch(`${imageUrl}/info.json`)
+				const infoResponse = await fetch(`${baseImageUrl}/info.json`)
 				const info = await infoResponse.json()
 
 				imageWidth = info.width
@@ -124,7 +123,7 @@ const Viewer = (props: {
 				tileLayer.set('type', 'image')
 				map.addLayer(tileLayer)
 
-				// VIEW ------------------------------------------------------------------
+				// VIEW ----------------------------------------------------------------
 				const view = new View({
 					center: [info.width / 2, info.height / 2],
 					resolutions: iiifTileSource.getTileGrid().getResolutions(),
@@ -133,6 +132,60 @@ const Viewer = (props: {
 				})
 				map.setView(view)
 				view.fit(iiifTileSource.getTileGrid().getExtent())
+			}
+
+			// IMAGE LAYERS ----------------------------------------------------------
+			// For the remaining images, we need to create a new layer and source for
+			// each.
+			for (let i = 1; i < imageUrls.length; i++) {
+				const imageUrl = imageUrls[i]
+				const imageExt = imageUrl.split('.').pop()
+				const imageName = imageUrl.split('/').pop()
+
+				if (imageExt === 'dzi') {
+					const response = await fetch(imageUrl)
+					const dzi = await parseDzi(await response.text())
+
+					const baseUrl = imageUrl.substring(0, imageUrl.lastIndexOf('.'))
+					const templateUrl = `${baseUrl}_files/{z}/{x}_{y}.${dzi.format}`
+					const tileSource = new Zoomify({
+						url: templateUrl,
+						size: [dzi.size.width, dzi.size.height],
+						tileSize: dzi.tileSize,
+					})
+
+					const offset = Math.ceil(Math.log(dzi.tileSize) / Math.LN2)
+
+					tileSource.setTileUrlFunction((tileCoord) => {
+						return templateUrl
+							.replace('{z}', (tileCoord[0] + offset).toString())
+							.replace('{x}', tileCoord[1].toString())
+							.replace('{y}', tileCoord[2].toString())
+					})
+
+					const tileLayer = new TileLayer({ source: tileSource })
+					tileLayer.set('id', imageName)
+					tileLayer.set('type', 'image')
+					map.addLayer(tileLayer)
+				} else {
+					const infoResponse = await fetch(`${imageUrl}/info.json`)
+					const info = await infoResponse.json()
+
+					imageWidth = info.width
+					imageHeight = info.height
+
+					const options = new IIIFInfo(info).getTileSourceOptions()
+					if (options === undefined || options.version === undefined) {
+						throw new Error('Unable to parse IIIF info.json')
+					}
+
+					const iiifTileSource = new IIIF(options)
+
+					const tileLayer = new TileLayer({ source: iiifTileSource })
+					tileLayer.set('id', `image-${i}`)
+					tileLayer.set('type', 'image')
+					map.addLayer(tileLayer)
+				}
 			}
 
 			// ANNOTATION LAYER ------------------------------------------------------
@@ -245,7 +298,7 @@ const Viewer = (props: {
 				.getLayers()
 				.getArray()
 				.filter((layer) => layer.get('type') === 'annotation')[0]
-			map.getLayers().set('active', { layer: firstLayer, index: 0 })
+			map.getLayers().set('activeLayer', { layer: firstLayer, index: 0 })
 
 			setMap(map)
 
@@ -264,7 +317,7 @@ const Viewer = (props: {
 				})
 			}
 		})()
-	}, [imageUrl, annotationData.classes, annotationData.layers, imageExt])
+	}, [imageUrls, annotationData.classes, annotationData.layers])
 
 	return (
 		<div className="min-w-full min-h-screen flex bg-gray-100">

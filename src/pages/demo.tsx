@@ -35,8 +35,9 @@ const defaultAnnotation: Annotation = {
 const Demo = () => {
 	// Demo uses example image from S3 bucket
 
-	const imageUrl =
-		'https://storage.googleapis.com/gtl-study-1ase6a/images/qpkecO/dz/qpkecO.dzi'
+	const imageUrls = [
+		'https://storage.googleapis.com/gtl-study-1ase6a/images/qpkecO/dz/qpkecO.dzi',
+	]
 
 	const tilesUrl = `https://storage.googleapis.com/gtl-study-1ase6a/images/qpkecO/3d/tiles`
 
@@ -46,9 +47,8 @@ const Demo = () => {
 				<title>Demo - AIDA 3D</title>
 			</Head>
 			<Viewer
-				imageUrl={imageUrl}
+				imageUrls={imageUrls}
 				tilesUrl={tilesUrl}
-				imageExt={'dzi'}
 				annotationData={defaultAnnotation}
 			/>
 		</>

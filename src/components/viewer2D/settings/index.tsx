@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import Map from 'ol/Map'
 
 import Overview from './overview'
+import Images from './images'
 import Layers from './layers'
 import Classes from './classes'
 
@@ -47,6 +48,7 @@ const Settings = (props: { map: Map }) => {
 						<ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
 					</button>
 					<Overview map={map} />
+					<Images map={map} />
 					<Layers map={map} />
 					<Classes map={map} />
 				</div>

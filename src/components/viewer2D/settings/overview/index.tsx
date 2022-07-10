@@ -19,20 +19,20 @@ const Overview = (props: { map: Map }) => {
 	const [isOpen, setIsOpen] = useState(true)
 
 	useEffect(() => {
-		const imageLayer = map
+		const imageLayers = map
 			.getLayers()
 			.getArray()
-			.find((layer) => layer.get('id') === 'image') as TileLayer<Zoomify>
-		const imageSource = imageLayer.getSource()
+			.filter((layer) => layer.get('type') === 'image') as TileLayer<Zoomify>[]
+
+		// Create matching layers for each source
+		const overviewLayers = imageLayers.map(
+			(layer) => new TileLayer({ source: layer.getSource() })
+		)
 
 		const overview = new OverviewMap({
 			className: 'overview ol-overviewmap',
 			collapsible: false,
-			layers: [
-				new TileLayer({
-					source: imageSource,
-				}),
-			],
+			layers: overviewLayers,
 			target: overviewEl.current || undefined,
 		})
 		map.addControl(overview)

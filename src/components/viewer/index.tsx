@@ -7,12 +7,11 @@ import Viewer3D from '../viewer3D'
 import { Annotation } from '../../types/annotation'
 
 const Viewer = (props: {
-	imageUrl: string
-	imageExt: string
+	imageUrls: string[]
 	annotationData: Annotation
 	tilesUrl: string
 }) => {
-	const { imageUrl, annotationData, imageExt, tilesUrl } = props
+	const { imageUrls, annotationData, tilesUrl } = props
 
 	const [tile, setTile] = useState<[number, number]>()
 	const [select3D, setSelect3D] = useState(null)
@@ -22,8 +21,7 @@ const Viewer = (props: {
 		<div className="min-w-full h-screen flex bg-gray-100">
 			<div className="w-1/2 relative">
 				<Viewer2D
-					imageUrl={imageUrl}
-					imageExt={imageExt}
+					imageUrls={imageUrls}
 					annotationData={annotationData}
 					setTile={setTile}
 					select3D={select3D}

@@ -43,9 +43,8 @@ const AIDA = () => {
 	const router = useRouter()
 	const { asPath, query } = router
 
-	const [imageUrl, setImageUrl] = useState('')
+	const [imageUrls, setImageUrls] = useState<string[]>([])
 	const [imageName, setImageName] = useState('')
-	const [imageExt, setImageExt] = useState('dzi')
 	const [tilesUrl, setTilesUrl] = useState('')
 
 	const [annotationData, setAnnotationData] = useState(defaultAnnotation)
@@ -70,18 +69,16 @@ const AIDA = () => {
 
 					if (projectResponse.ok) {
 						const projectResponseJson = await projectResponse.json()
+						const images = projectResponseJson.images
 
-						// Extract image
-						if (
-							projectResponseJson.image.endsWith('.tiff') ||
-							projectResponseJson.image.endsWith('.tif')
-						) {
-							setImageUrl(`${IIIFHost}/${projectResponseJson.image}`)
-						} else {
-							setImageUrl(`${defaultDataHost}/${projectResponseJson.image}`)
+						// Extract image URLs
+						for (const image of images) {
+							if (image.endsWith('.tiff') || image.endsWith('.tif')) {
+								setImageUrls((prev) => [...prev, `${IIIFHost}/${image}`])
+							} else {
+								setImageUrls((prev) => [...prev, `${defaultDataHost}/${image}`])
+							}
 						}
-
-						setImageExt(projectResponseJson.image.split('.')[1])
 
 						// Extract tiles
 						setTilesUrl(`${defaultDataHost}/${projectResponseJson.tiles}`)
@@ -99,10 +96,9 @@ const AIDA = () => {
 			</Head>
 			{!isLoading && (
 				<Viewer
-					imageUrl={imageUrl}
+					imageUrls={imageUrls}
 					tilesUrl={tilesUrl}
 					annotationData={annotationData}
-					imageExt={imageExt}
 				/>
 			)}
 		</>

@@ -47,7 +47,7 @@ const Toolbar = (props: {
 	// This use of 'as' in the type definition might be somewhat risky...
 	// essentially we know (?!) that the layer with this property both exists and
 	// is a VectorLayer so we can explicitly cast it as such.
-	const vectorLayer = map.getLayers().get('active').layer as VectorLayer<
+	const vectorLayer = map.getLayers().get('activeLayer').layer as VectorLayer<
 		VectorSource<Geometry>
 	>
 
@@ -60,7 +60,7 @@ const Toolbar = (props: {
 	useEffect(() => {
 		const layers = map.getLayers()
 		const listener = () => {
-			const activeLayer = layers.get('active').layer
+			const activeLayer = layers.get('activeLayer').layer
 			if (activeLayer) setVectorSource(activeLayer.getSource())
 		}
 

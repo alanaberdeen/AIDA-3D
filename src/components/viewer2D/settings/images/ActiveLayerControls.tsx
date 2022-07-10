@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react'
 
-import VectorLayer from 'ol/layer/Vector'
-import VectorSource from 'ol/source/Vector'
-import Geometry from 'ol/geom/Geometry'
-
 import Slider from '../../../interaction/Slider'
+import TileLayer from 'ol/layer/Tile'
+import Zoomify from 'ol/source/Zoomify'
 
 // Manage annotation layers
-const ActiveLayerControls = (props: {
-	activeLayer: VectorLayer<VectorSource<Geometry>>
-}) => {
+const ActiveLayerControls = (props: { activeLayer: TileLayer<Zoomify> }) => {
 	const { activeLayer } = props
 
 	// Opacity controls

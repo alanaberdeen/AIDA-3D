@@ -8,10 +8,12 @@ import VectorSource from 'ol/source/Vector'
 import Geometry from 'ol/geom/Geometry'
 
 import { EyeIcon, EyeOffIcon } from '@heroicons/react/outline'
+import TileLayer from 'ol/layer/Tile'
+import Zoomify from 'ol/source/Zoomify'
 
 // Manage annotation layers
 const Layer = (props: {
-	layer: VectorLayer<VectorSource<Geometry>>
+	layer: TileLayer<Zoomify>
 	index: number
 	active: boolean
 	map: Map
@@ -58,9 +60,11 @@ const Layer = (props: {
 	}, [layer])
 
 	// Set layer active
-	const setLayerActive = (layer: VectorLayer<VectorSource<Geometry>>) => {
-		map.getLayers().set('activeLayer', {
-			layer,
+	const setLayerActive = (layer: TileLayer<Zoomify>) => {
+		console.log('seting active layer')
+		console.log(layer)
+		map.getLayers().set('activeImage', {
+			image: layer,
 			index,
 		})
 	}
@@ -149,7 +153,7 @@ const Layer = (props: {
 					leaveTo="scale-95 opacity-0"
 				>
 					<Menu.Items
-						className={`absolute w-28 mt-2 origin-top-right -translate-x-full bg-white divide-y divide-gray-100 rounded-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+						className={`z-50 absolute w-28 mt-2 origin-top-right -translate-x-full bg-white divide-y divide-gray-100 rounded-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
 						style={{ left: contextMenuPos[0], top: contextMenuPos[1] }}
 					>
 						<div className="px-1 py-1 ">
