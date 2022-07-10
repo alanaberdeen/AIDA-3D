@@ -140,7 +140,7 @@ export default function ColorPicker(props: {
 	}
 
 	return (
-		<Popover className="m-1">
+		<Popover className="grid place-content-center">
 			{({ open }) => (
 				<>
 					<Popover.Button
