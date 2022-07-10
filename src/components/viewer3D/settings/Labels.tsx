@@ -4,7 +4,8 @@ import { Disclosure } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/solid'
 
 import { InputAutoComplete, Item } from '../../interaction/InputAutoComplete'
-import InputComboBox from '../../interaction/InputComboBox'
+import InputCombobox from '../../interaction/InputComboBox'
+import Input from '../../interaction/Input'
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
@@ -37,7 +38,7 @@ const Labels = (props) => {
 	const { featureData, selected } = props
 
 	const [commonLabels, setCommonLabels] = useState(new Set())
-	const [existingLabels, setExistingLabels] = useState(new Set())
+	const [existingLabels, setExistingLabels] = useState(new Set<string>())
 
 	// Set the range of existing labels
 	useEffect(() => {
@@ -138,44 +139,40 @@ const Labels = (props) => {
 						Labels
 					</Disclosure.Button>
 					<Disclosure.Panel className="relative px-4 py-2 w-48">
-						<div className="ml-2">
-							<InputAutoComplete
-								label="New label"
-								allowsCustomValue
+						<div>
+							<Input
 								commitInput={commitInput}
+								label={'Add label'}
 								disabled={selected.length === 0}
-							>
-								{Array.from(existingLabels).map((label, index) => {
-									return (
-										<Item key={index} textValue={label}>
-											{label}
-										</Item>
-									)
-								})}
-							</InputAutoComplete>
+							/>
 						</div>
 
-						{/* Filter meshes to export */}
-						<div className="ml-2 mt-4 mb-1 text-sm">Selected item labels:</div>
-
-						{/* Show common class labels for the selected items */}
-						{Array.from(commonLabels).map((label, index) => {
-							return (
-								<div
-									key={index}
-									className="flex items-center justify-between mx-2 max-w-48"
-								>
-									<div className="truncate">{label}</div>
-									<button
-										type="button"
-										className="flex-none inline-flex items-center rounded-full text-gray-500 hover:text-gray-800 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500"
-										onClick={() => removeLabel(label)}
-									>
-										<XIcon className="h-3 w-3" aria-hidden="true" />
-									</button>
+						{selected.length > 0 && (
+							<>
+								{' '}
+								<div className="ml-2 mt-4 mb-1 text-sm">
+									Selected item labels:
 								</div>
-							)
-						})}
+								{/* Show common class labels for the selected items */}
+								{Array.from(commonLabels).map((label, index) => {
+									return (
+										<div
+											key={index}
+											className="flex items-center justify-between mx-2 max-w-48"
+										>
+											<div className="truncate">{label}</div>
+											<button
+												type="button"
+												className="flex-none inline-flex items-center rounded-full text-gray-500 hover:text-gray-800 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500"
+												onClick={() => removeLabel(label)}
+											>
+												<XIcon className="h-3 w-3" aria-hidden="true" />
+											</button>
+										</div>
+									)
+								})}
+							</>
+						)}
 					</Disclosure.Panel>
 				</>
 			)}
