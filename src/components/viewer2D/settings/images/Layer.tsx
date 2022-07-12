@@ -61,8 +61,6 @@ const Layer = (props: {
 
 	// Set layer active
 	const setLayerActive = (layer: TileLayer<Zoomify>) => {
-		console.log('seting active layer')
-		console.log(layer)
 		map.getLayers().set('activeImage', {
 			image: layer,
 			index,
