@@ -2,7 +2,6 @@ import { Fragment, useState, useEffect } from 'react'
 import { Disclosure, Listbox, Transition, Switch } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { Camera, Scene, WebGLRenderer, Group } from 'three'
-
 import * as d3 from 'd3'
 
 function classNames(...classes) {
@@ -22,6 +21,8 @@ const allFeatures = [
 	{ name: 'Epithelial Scores', value: 'epithelialScores' },
 	{ name: 'Mesenchymal Score', value: 'mesenchymalScores' },
 	{ name: 'Irregularity Score', value: 'nucleusIrregularityScores' },
+	{ name: 'gH2AX', value: 'is_gH2AX' },
+	{ name: 'CD8', value: 'is_CD8' },
 ]
 
 // https://github.com/d3/d3-scale-chromatic
@@ -54,6 +55,18 @@ const colorScales = [
 		name: 'Reds',
 		value: 'interpolateReds',
 	},
+	{
+		name: 'Greys',
+		value: 'interpolateGreys',
+	},
+	{
+		name: 'Purples',
+		value: 'interpolatePurples',
+	},
+	{
+		name: 'Oranges',
+		value: 'interpolateOranges',
+	},
 ]
 
 const ColorMap = (props: {
@@ -70,6 +83,7 @@ const ColorMap = (props: {
 	const [normalise, setNormalise] = useState(true)
 	const [min, setMin] = useState(0)
 	const [max, setMax] = useState(1)
+	const [colorMaps, setColorMaps] = useState([])
 
 	// When new tile is chosen featureData will update. We need to check which
 	// features are available in the new tile.

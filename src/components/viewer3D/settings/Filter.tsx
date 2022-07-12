@@ -17,6 +17,8 @@ const allFeatures = [
 	{ name: 'Epithelial Scores', value: 'epithelialScores' },
 	{ name: 'Mesenchymal Score', value: 'mesenchymalScores' },
 	{ name: 'Irregularity Score', value: 'nucleusIrregularityScores' },
+	{ name: 'gH2AX', value: 'is_gH2AX' },
+	{ name: 'CD8', value: 'is_CD8' },
 ]
 
 const Filter = (props: {

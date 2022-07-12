@@ -22,14 +22,14 @@ export default function Clipping(props: {
 	// TODO: this should be automatically read in from the tile feature JSON
 	const substack = [140.8, 164.2]
 
-	const [activeHNESubstack, setActiveHNESubstack] = useState(true)
+	const [activeHNESubstack, setActiveHNESubstack] = useState(false)
 	const [HNESubstack, setHNESubstack] = useState(substack)
-	const [activeClippingPlanes, setActiveClippingPlanes] = useState(new Set('x'))
+	const [activeClippingPlanes, setActiveClippingPlanes] = useState(new Set())
 
 	const clippingPlanes = useRef({
 		x: [
-			new Plane(new Vector3(1, 0, 0), -substack[0]),
-			new Plane(new Vector3(-1, 0, 0), substack[1]),
+			new Plane(new Vector3(1, 0, 0), 0),
+			new Plane(new Vector3(-1, 0, 0), 50),
 		],
 		y: [
 			new Plane(new Vector3(0, 1, 0), 75),
@@ -142,6 +142,10 @@ export default function Clipping(props: {
 							<Switch onChange={toggleHNEPlane} enabled={activeHNESubstack} />
 						</div>
 
+						{/*
+							TODO: make the min/max value for these sliders be dynamic to 
+										model dimensions.
+						*/}
 						<div className="mx-4 flex items-center">
 							<div className="mr-4">x</div>
 							<Switch
@@ -153,7 +157,7 @@ export default function Clipping(props: {
 							/>
 							<RangeSlider
 								minValue={-10}
-								maxValue={350}
+								maxValue={200}
 								defaultValue={substack}
 								step={(250 - -10) / 100}
 								aria-label="adjust x clipping planes"
