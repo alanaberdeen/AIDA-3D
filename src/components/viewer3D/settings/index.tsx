@@ -5,7 +5,7 @@ import { WebGLRenderer, Scene, Camera, Group } from 'three'
 
 import Clipping from './Clipping'
 import Explode from './Explode'
-import ColorMap from './colorMap'
+import ColorMap from './colorMaps'
 import Filter from './Filter'
 import Orientation from './Orientation'
 import Labels from './Labels'
