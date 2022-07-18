@@ -18,6 +18,7 @@
 		"@react-aria/visually-hidden": "^3.2.3",
 		"@react-stately/numberfield": "^3.0.2",
 		"@react-stately/slider": "^3.0.3",
+		"@tailwindcss/forms": "^0.5.2",
 		"body-parser": "^1.19.0",
 		"connect-history-api-fallback": "^1.6.0",
 		"d3": "^7.3.0",

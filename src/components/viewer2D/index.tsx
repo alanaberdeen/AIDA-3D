@@ -156,12 +156,20 @@ const Viewer = (props: {
 
 					const offset = Math.ceil(Math.log(dzi.tileSize) / Math.LN2)
 
-					tileSource.setTileUrlFunction((tileCoord) => {
-						return templateUrl
-							.replace('{z}', (tileCoord[0] + offset).toString())
-							.replace('{x}', tileCoord[1].toString())
-							.replace('{y}', tileCoord[2].toString())
-					})
+					// Use an IIFE to create a new TileUrlFunction for each layer so that
+					// the templateURL is evaluated immediately and therefore static in
+					// subsequent calls.
+					const tileUrlFunction = (() => {
+						const template = templateUrl
+						return (tileCoord) => {
+							return template
+								.replace('{z}', (tileCoord[0] + offset).toString())
+								.replace('{x}', tileCoord[1].toString())
+								.replace('{y}', tileCoord[2].toString())
+						}
+					})()
+
+					tileSource.setTileUrlFunction(tileUrlFunction)
 
 					const tileLayer = new TileLayer({ source: tileSource })
 					tileLayer.set('id', imageName)
@@ -206,33 +214,34 @@ const Viewer = (props: {
 
 			// TODO: dynamically set this tileSize from either user input of a
 			//			 configuration file.
-			const tileSize = 512
-			const overlap = 51.5
+			const gutter = 25
+			const tileSize = 302
+			const overlap = 0
 			const gridSize = tileSize - overlap
-			const cols = Math.ceil(imageWidth / tileSize)
-			const rows = Math.ceil(imageHeight / tileSize) + 1
+			const cols = Math.floor(imageWidth / tileSize)
+			const rows = Math.floor(imageHeight / tileSize)
 
 			// Create an interactive grid of polygons.
-			for (let i = 0; i <= cols; i++) {
-				for (let j = 0; j <= rows; j++) {
-					let x1 = i * gridSize + overlap
-					let y1 = -j * gridSize - overlap
-					let x2 = (i + 1) * gridSize + overlap
-					let y2 = -(j + 1) * gridSize - overlap
+			for (let i = 0; i < cols; i++) {
+				for (let j = 0; j < rows; j++) {
+					let x1 = i * gridSize + overlap + (i + 1) * gutter
+					let y1 = -j * gridSize - overlap - (j + 1) * gutter
+					let x2 = (i + 1) * gridSize + overlap + (i + 1) * gutter
+					let y2 = -(j + 1) * gridSize - overlap - (j + 1) * gutter
 
 					// Handle first and last row/col
 					if (i === 0) {
-						x1 = 0
-						x2 = 512
+						x1 = 0 + gutter
+						x2 = tileSize + gutter
 					} else if (i === cols) {
-						x2 = imageWidth
+						x2 = imageWidth - gutter
 					}
 
 					if (j === 0) {
-						y1 = 0
-						y2 = -512
+						y1 = 0 - gutter
+						y2 = -tileSize - gutter
 					} else if (j === rows) {
-						y2 = -imageHeight
+						y2 = -imageHeight + gutter
 					}
 
 					const polygon = new Polygon([
@@ -263,8 +272,8 @@ const Viewer = (props: {
 
 					// TODO: check why the 3D model is reflected. This is potentially
 					//       something strange with the way the 3D demo data was prepared.
-					feature.set('3D-row', rows + 1 - j)
-					feature.set('3D-col', cols + 1 - i)
+					feature.set('3D-row', i + 3 * j)
+					feature.set('3D-col', 0)
 
 					vectorSource.addFeature(feature)
 				}

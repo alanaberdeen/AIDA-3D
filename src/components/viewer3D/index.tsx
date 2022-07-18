@@ -96,7 +96,7 @@ const Viewer3D = (props: {
 		}
 	}, [])
 
-	// // Update tile
+	// Update tile
 	useEffect(() => {
 		if (tile) {
 			// Activate visual loading indicator
@@ -150,7 +150,10 @@ const Viewer3D = (props: {
 				} else {
 					// Reflect on y-axis
 					newContent.applyMatrix4(new THREE.Matrix4().makeScale(1, -1, 1))
-					newContent.translateY(-460)
+					newContent.rotateX(Math.PI / 2)
+					newContent.rotateZ(Math.PI / 2)
+					newContent.rotateY(Math.PI)
+					newContent.translateZ(-302)
 				}
 
 				// Setup the space for the new object

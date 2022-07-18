@@ -61,8 +61,6 @@ const Layer = (props: {
 
 	// Set layer active
 	const setLayerActive = (layer: TileLayer<Zoomify>) => {
-		console.log('seting active layer')
-		console.log(layer)
 		map.getLayers().set('activeImage', {
 			image: layer,
 			index,
@@ -104,7 +102,7 @@ const Layer = (props: {
 				name="layer-name"
 				ref={nameInputRef}
 				className={`${
-					isEditingName ? 'w-full m-1' : 'w-0'
+					isEditingName ? 'w-40 m-1' : 'w-0 h-0 m-0 p-0'
 				} block focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-teal-500 focus:border-teal-500 border-gray-300`}
 				placeholder={layer.get('id')}
 				onBlur={() => {
@@ -122,7 +120,7 @@ const Layer = (props: {
 			<button
 				type="button"
 				className={`${
-					isEditingName ? 'w-0' : 'w-full m-1'
+					isEditingName ? 'w-0' : 'w-40 m-1'
 				} truncate text-left w-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-teal-500`}
 				onClick={() => setLayerActive(layer)}
 				onDoubleClick={() => {
