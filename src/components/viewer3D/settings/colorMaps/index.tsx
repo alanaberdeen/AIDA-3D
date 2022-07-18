@@ -4,7 +4,10 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 import { Camera, Scene, WebGLRenderer, Group } from 'three'
 import * as d3 from 'd3'
 
-function classNames(...classes) {
+import ColorMap from './ColorMap'
+import FooterToolbar from './FooterToolbar'
+
+function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(' ')
 }
 
@@ -29,47 +32,61 @@ const allFeatures = [
 const colorScales = [
 	{
 		name: 'Brown to teal-green',
-		value: 'interpolateBrBG',
+		value: d3.interpolateBrBG,
 	},
 	{
 		name: 'Purple to green',
-		value: 'interpolatePRGn',
+		value: d3.interpolatePRGn,
 	},
 	{
 		name: 'Red to blue',
-		value: 'interpolateRdBu',
+		value: d3.interpolateRdBu,
 	},
 	{
 		name: 'Spectral',
-		value: 'interpolateSpectral',
+		value: d3.interpolateSpectral,
 	},
 	{
 		name: 'Blues',
-		value: 'interpolateBlues',
+		value: d3.interpolateBlues,
 	},
 	{
 		name: 'Greens',
-		value: 'interpolateGreens',
+		value: d3.interpolateGreens,
 	},
 	{
 		name: 'Reds',
-		value: 'interpolateReds',
+		value: d3.interpolateReds,
 	},
 	{
 		name: 'Greys',
-		value: 'interpolateGreys',
+		value: d3.interpolateGreys,
 	},
 	{
 		name: 'Purples',
-		value: 'interpolatePurples',
+		value: d3.interpolatePurples,
 	},
 	{
 		name: 'Oranges',
-		value: 'interpolateOranges',
+		value: d3.interpolateOranges,
+	},
+	{
+		name: 'Binary yellow',
+		value: (value: number) => {
+			if (value > 0.5) return 'rgb(255,247,0)'
+			else return 'rgb(255,255,247)'
+		},
+	},
+	{
+		name: 'Binary red',
+		value: (value: number) => {
+			if (value > 0.5) return 'rgb(255,0,0)'
+			else return 'rgb(255,247,247)'
+		},
 	},
 ]
 
-const ColorMap = (props: {
+const ColorMaps = (props: {
 	content: Group
 	renderer: WebGLRenderer
 	scene: Scene
@@ -77,13 +94,29 @@ const ColorMap = (props: {
 }) => {
 	const { content, scene, camera, renderer, featureData } = props
 
-	const [colorScale, setColorScale] = useState(colorScales[4])
-	const [featureMap, setFeatureMap] = useState(allFeatures[0])
 	const [features, setFeatures] = useState(allFeatures)
-	const [normalise, setNormalise] = useState(true)
-	const [min, setMin] = useState(0)
-	const [max, setMax] = useState(1)
-	const [colorMaps, setColorMaps] = useState([])
+	const [colorMaps, setColorMaps] = useState([
+		{
+			featureMap: allFeatures[7],
+			colorScale: colorScales[10],
+			normalise: true,
+		},
+		{
+			featureMap: allFeatures[8],
+			colorScale: colorScales[11],
+			normalise: true,
+		},
+	])
+	const [activeColorMapIndex, setActiveColorMapIndex] = useState(0)
+
+	const deleteColorMap = (index: number) => {
+		const newColorMaps = [...colorMaps]
+		newColorMaps.splice(index, 1)
+		setColorMaps(newColorMaps)
+		if (activeColorMapIndex === index) {
+			setActiveColorMapIndex(0)
+		}
+	}
 
 	// When new tile is chosen featureData will update. We need to check which
 	// features are available in the new tile.
@@ -93,38 +126,49 @@ const ColorMap = (props: {
 				Object.keys(featureData).includes(f.value)
 			)
 			setFeatures(featureSubset)
-			setFeatureMap(featureSubset[0])
 		}
 	}, [featureData])
 
-	// Color maps
+	// Update 3D mesh colors
 	useEffect(() => {
 		if (featureData && content) {
-			const chosenMap = featureData[featureMap.value]
-
-			const mapMax = Math.max(...chosenMap)
-			const mapMin = Math.min(...chosenMap)
-
-			let normalizedSegmentationConfidence
-			if (normalise) {
-				normalizedSegmentationConfidence = chosenMap.map(
-					normalize(mapMin, mapMax)
-				)
-				setMax(mapMax)
-				setMin(mapMin)
-			} else {
-				normalizedSegmentationConfidence = chosenMap
-				setMax(1)
-				setMin(0)
-			}
-
 			content.children.forEach((child, index) => {
 				if (child.isMesh && child.name.includes('nucleus')) {
+					// Combine colors from all maps
+					let color = colorMaps[0].colorScale.value(
+						(() => {
+							const featureValues = featureData[colorMaps[0].featureMap.value]
+							const mapMax = Math.max(...featureValues)
+							const mapMin = Math.min(...featureValues)
+
+							const featureValue = colorMaps[0].normalise
+								? normalize(mapMin, mapMax)(featureValues[index])
+								: featureValues[index]
+
+							return featureValue
+						})()
+					)
+
+					for (let i = 1; i < colorMaps.length; i++) {
+						const colorMap = colorMaps[i]
+						const featureValues = featureData[colorMap.featureMap.value]
+						const mapMax = Math.max(...featureValues)
+						const mapMin = Math.min(...featureValues)
+
+						const featureValue = colorMap.normalise
+							? normalize(mapMin, mapMax)(featureValues[index])
+							: featureValues[index]
+
+						color = d3.interpolate(
+							color,
+							colorMap.colorScale.value(featureValue)
+						)(featureValue)
+					}
+
 					const nucleus = child
 					const newMaterial = nucleus.material.clone()
-					newMaterial.color.setStyle(
-						d3[colorScale.value](normalizedSegmentationConfidence[index])
-					)
+					newMaterial.color.setStyle(color)
+
 					nucleus.material = newMaterial
 				}
 			})
@@ -136,10 +180,9 @@ const ColorMap = (props: {
 		renderer,
 		scene,
 		camera,
-		featureMap,
-		normalise,
-		colorScale,
 		featureData,
+		activeColorMapIndex,
+		colorMaps,
 	])
 
 	return (
@@ -161,11 +204,20 @@ const ColorMap = (props: {
 						>
 							<path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
 						</svg>
-						Color Map
+						Color Maps
 					</Disclosure.Button>
 					<Disclosure.Panel className="relative px-4 py-2 w-48">
 						{/* Change feature map */}
-						<Listbox value={featureMap} onChange={setFeatureMap}>
+						<Listbox
+							value={colorMaps[activeColorMapIndex].featureMap}
+							onChange={(value) => {
+								setColorMaps((prev) => {
+									const newColorMaps = [...prev]
+									newColorMaps[activeColorMapIndex].featureMap = value
+									return newColorMaps
+								})
+							}}
+						>
 							{({ open }) => (
 								<>
 									<Listbox.Label className="block text-sm font-medium text-gray-700">
@@ -173,7 +225,9 @@ const ColorMap = (props: {
 									</Listbox.Label>
 									<div className="mt-1 relative">
 										<Listbox.Button className="relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
-											<span className="block truncate">{featureMap.name}</span>
+											<span className="block truncate">
+												{colorMaps[activeColorMapIndex].featureMap.name}
+											</span>
 											<span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
 												<SelectorIcon
 													className="h-5 w-5 text-gray-400"
@@ -193,9 +247,9 @@ const ColorMap = (props: {
 												static
 												className="mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
 											>
-												{features.map((setting) => (
+												{features.map((setting, index) => (
 													<Listbox.Option
-														key={setting.value}
+														key={index}
 														className={({ active }) =>
 															classNames(
 																active
@@ -242,7 +296,16 @@ const ColorMap = (props: {
 						</Listbox>
 
 						{/* Change D3 color scale */}
-						<Listbox value={colorScale} onChange={setColorScale}>
+						<Listbox
+							value={colorMaps[activeColorMapIndex].colorScale}
+							onChange={(value) => {
+								setColorMaps((prev) => {
+									const newColorMaps = [...prev]
+									newColorMaps[activeColorMapIndex].colorScale = value
+									return newColorMaps
+								})
+							}}
+						>
 							{({ open }) => (
 								<>
 									<Listbox.Label className="block text-sm font-medium text-gray-700 mt-4">
@@ -250,7 +313,9 @@ const ColorMap = (props: {
 									</Listbox.Label>
 									<div className="mt-1 relative">
 										<Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
-											<span className="block truncate">{colorScale.name}</span>
+											<span className="block truncate">
+												{colorMaps[activeColorMapIndex].colorScale.name}
+											</span>
 											<span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
 												<SelectorIcon
 													className="h-5 w-5 text-gray-400"
@@ -270,9 +335,9 @@ const ColorMap = (props: {
 												static
 												className="mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
 											>
-												{colorScales.map((scale) => (
+												{colorScales.map((scale, index) => (
 													<Listbox.Option
-														key={scale.value}
+														key={index}
 														className={({ active }) =>
 															classNames(
 																active
@@ -318,29 +383,7 @@ const ColorMap = (props: {
 							)}
 						</Listbox>
 
-						{/* Visualise current color map */}
-						<div
-							className="width-full h-4 mt-2 rounded"
-							style={{
-								background: `linear-gradient(to right, ${d3[colorScale.value](
-									0.1
-								)}, ${d3[colorScale.value](0.2)}, ${d3[colorScale.value](
-									0.3
-								)}, ${d3[colorScale.value](0.4)}, ${d3[colorScale.value](
-									0.5
-								)}, ${d3[colorScale.value](0.6)},${d3[colorScale.value](
-									0.7
-								)}, ${d3[colorScale.value](0.8)}, ${d3[colorScale.value](
-									0.9
-								)},${d3[colorScale.value](1)})`,
-							}}
-						/>
-						<div className="flex justify-between text-sm text-gray-700">
-							<div>{min.toFixed(2)}</div>
-							<div>{max.toFixed(2)}</div>
-						</div>
-
-						{/* Normalise colour map, between max-min values. */}
+						{/* Normalise color map, between max-min values. */}
 						<Switch.Group as="div" className="flex items-center mt-4">
 							<Switch.Label
 								as="span"
@@ -351,12 +394,18 @@ const ColorMap = (props: {
 									Normalise
 								</span>
 								<span className="text-xs text-gray-500">
-									Restrict color range to min-max feature values
+									Bound range to min-max feature values
 								</span>
 							</Switch.Label>
 							<Switch
-								checked={normalise}
-								onChange={setNormalise}
+								checked={colorMaps[activeColorMapIndex].normalise}
+								onChange={(value) => {
+									setColorMaps((prev) => {
+										const newColorMaps = [...prev]
+										newColorMaps[activeColorMapIndex].normalise = value
+										return newColorMaps
+									})
+								}}
 								className="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
 							>
 								<span className="sr-only">Normalise color map</span>
@@ -367,19 +416,51 @@ const ColorMap = (props: {
 								<span
 									aria-hidden="true"
 									className={classNames(
-										normalise ? 'bg-teal-600' : 'bg-gray-200',
+										colorMaps[activeColorMapIndex].normalise
+											? 'bg-teal-600'
+											: 'bg-gray-200',
 										'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
 									)}
 								/>
 								<span
 									aria-hidden="true"
 									className={classNames(
-										normalise ? 'translate-x-5' : 'translate-x-0',
+										colorMaps[activeColorMapIndex].normalise
+											? 'translate-x-5'
+											: 'translate-x-0',
 										'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
 									)}
 								/>
 							</Switch>
 						</Switch.Group>
+
+						{/* List of active color maps */}
+						<div className="max-h-40 overflow-y-auto mt-4">
+							{colorMaps.map((colorMap, index) => (
+								<ColorMap
+									key={index}
+									colorMap={colorMap}
+									index={index}
+									active={activeColorMapIndex === index}
+									setActive={setActiveColorMapIndex}
+									deleteColorMap={deleteColorMap}
+								/>
+							))}
+						</div>
+
+						{/* Footer toolbar */}
+						<FooterToolbar
+							addNew={() =>
+								setColorMaps((prev) => [
+									...prev,
+									{
+										featureMap: allFeatures[0],
+										colorScale: colorScales[4],
+										normalise: true,
+									},
+								])
+							}
+						/>
 					</Disclosure.Panel>
 				</>
 			)}
@@ -387,4 +468,4 @@ const ColorMap = (props: {
 	)
 }
 
-export default ColorMap
+export default ColorMaps
