@@ -33,13 +33,14 @@ const defaultAnnotation: Annotation = {
 }
 
 const Demo = () => {
-	// Demo uses example image from S3 bucket
-
+	// Demo uses example image from GCP bucket
 	const imageUrls = [
-		'https://storage.googleapis.com/gtl-study-1ase6a/images/qpkecO/dz/qpkecO.dzi',
+		'https://storage.googleapis.com/gtl-study-1ase6a/images/marker-demo/HE.dzi',
+		'https://storage.googleapis.com/gtl-study-1ase6a/images/marker-demo/CD8.dzi',
+		'https://storage.googleapis.com/gtl-study-1ase6a/images/marker-demo/GH2AX.dzi',
 	]
 
-	const tilesUrl = `https://storage.googleapis.com/gtl-study-1ase6a/images/qpkecO/3d/tiles`
+	const tilesUrl = `https://storage.googleapis.com/gtl-study-1ase6a/images/marker-demo/Cellpose3DGeometryAndFeatures`
 
 	return (
 		<>
