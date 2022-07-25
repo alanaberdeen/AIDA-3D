@@ -450,7 +450,7 @@ const ColorMaps = (props: {
 
 						{/* Footer toolbar */}
 						<FooterToolbar
-							addNew={() =>
+							addNew={() => {
 								setColorMaps((prev) => [
 									...prev,
 									{
@@ -459,7 +459,8 @@ const ColorMaps = (props: {
 										normalise: true,
 									},
 								])
-							}
+								setActiveColorMapIndex(colorMaps.length)
+							}}
 						/>
 					</Disclosure.Panel>
 				</>
