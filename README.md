@@ -72,10 +72,11 @@ local
 ```
 
 image.json defines the combination of 2D image and 3D segmentation tiles.
+`images` should contain the path of the dzi file(s) to show. If the list contains more than 1 dzi, the images would be overlay on each other.
 
 ```json
 {
-  "image": "image-dz/image.dzi",
+  "images": ["image-dz/image.dzi", "image-dz/image2.dzi", "..."],
   "tiles": "image-tiles"
 }
 ```
@@ -107,7 +108,7 @@ On MacOS:
 
 ```bash
 brew install vips
-vips dzsave input.tif output_folder --suffix .dzi
+vips dzsave input.tif output_folder --suffix .jpg
 ```
 
 ## About
