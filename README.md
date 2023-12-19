@@ -27,7 +27,7 @@ The software is published as Open Source under the permissive [MIT license](http
 You can use AIDA-3D on your local machine. The only requirement [NodeJS](https://nodejs.org/en/).
 
 1. Clone the repository
-2. Edit the aida.config.js file at project root to specify a path to serve your image data from, the default is `/local/data/`. [optional] 
+2. Edit the aida.config.js file at project root to specify a path to serve your image data from, the default is `/local/data/`. [optional]
 3. Install the dependencies via [NPM](https://www.npmjs.com/) `npm install`
 4. Run the build script `npm run build`
 5. Add the images and their corresponding 3D segmentation to the data directory (default `/local/data/`), or to the alternative location if you specified an alternative in step 2.
@@ -36,6 +36,7 @@ You can use AIDA-3D on your local machine. The only requirement [NodeJS](https:/
 8. Navigate to the localhost webserver specified in the console.
 
 ## Example local sever data directory
+
 ```
 local
 |  local.ts
@@ -71,6 +72,7 @@ local
 ```
 
 image.json defines the combination of 2D image and 3D segmentation tiles.
+
 ```
 {
   "image": "image-dz/image.dzi",
@@ -96,6 +98,17 @@ This removes the requirement for DZI file formats and replaces it with a web-ser
 - Edit the Cantaloupe configuration file so that `FilesystemSource.BasicLookupStrategy.path_prefix` points to `/local/data`.
 - Cataloupe server must be running at 'localhost:8182'
 - Currently only TIFF files are supported.
+
+## Creating .dzi files
+
+We recommend using `vips` to convert Tiff files to `.dzi`
+
+On MacOS:
+
+```bash
+brew install vips
+vips dzsave input.tif output_folder --suffix .dzi
+```
 
 ## About
 
