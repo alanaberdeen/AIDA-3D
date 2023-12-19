@@ -94,12 +94,15 @@ const Viewer = (props: {
 
 				// VIEW ----------------------------------------------------------------
 				const view = new View({
-					resolutions: tileSource.getTileGrid().getResolutions(),
-					extent: tileSource.getTileGrid().getExtent(),
+					resolutions: tileSource.getTileGrid()?.getResolutions(),
+					extent: tileSource.getTileGrid()?.getExtent(),
 					showFullExtent: true,
 				})
 				map.setView(view)
-				view.fit(tileSource.getTileGrid().getExtent())
+				const tileGrid = tileSource.getTileGrid()
+				if (tileGrid) {
+					view.fit(tileGrid.getExtent())
+				}
 			}
 			// Otherwise, we assume we're dealing with a IIIF image server.
 			// Likely .tiff.
@@ -126,12 +129,15 @@ const Viewer = (props: {
 				// VIEW ----------------------------------------------------------------
 				const view = new View({
 					center: [info.width / 2, info.height / 2],
-					resolutions: iiifTileSource.getTileGrid().getResolutions(),
-					extent: iiifTileSource.getTileGrid().getExtent(),
+					resolutions: iiifTileSource.getTileGrid()?.getResolutions(),
+					extent: iiifTileSource.getTileGrid()?.getExtent(),
 					showFullExtent: true,
 				})
 				map.setView(view)
-				view.fit(iiifTileSource.getTileGrid().getExtent())
+				const tileGrid = iiifTileSource.getTileGrid()
+				if (tileGrid) {
+					view.fit(tileGrid.getExtent())
+				}
 			}
 
 			// IMAGE LAYERS ----------------------------------------------------------
@@ -161,7 +167,7 @@ const Viewer = (props: {
 					// subsequent calls.
 					const tileUrlFunction = (() => {
 						const template = templateUrl
-						return (tileCoord) => {
+						return (tileCoord: number[]) => {
 							return template
 								.replace('{z}', (tileCoord[0] + offset).toString())
 								.replace('{x}', tileCoord[1].toString())

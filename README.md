@@ -37,7 +37,7 @@ You can use AIDA-3D on your local machine. The only requirement [NodeJS](https:/
 
 ## Example local sever data directory
 
-```
+```text
 local
 |  local.ts
 |  tsconfig.json
@@ -73,7 +73,7 @@ local
 
 image.json defines the combination of 2D image and 3D segmentation tiles.
 
-```
+```json
 {
   "image": "image-dz/image.dzi",
   "tiles": "image-tiles"
