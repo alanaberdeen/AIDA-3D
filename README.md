@@ -102,7 +102,7 @@ This removes the requirement for DZI file formats and replaces it with a web-ser
 
 ## Creating .dzi files
 
-We recommend using `vips` to convert Tiff files to `.dzi`
+We recommend using [libvips](https://github.com/libvips/libvips) and the `vips` command to convert Tiff files to `.dzi`
 
 On MacOS:
 
@@ -110,6 +110,8 @@ On MacOS:
 brew install vips
 vips dzsave input.tif output_folder --suffix .jpg
 ```
+
+[Full instructions and Windows binaries can be found on the libvips page](https://github.com/libvips/libvips?tab=readme-ov-file#install). 
 
 ## About
 
