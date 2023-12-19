@@ -25,10 +25,18 @@ const TableRow = (props: {
 		<div>
 			<div
 				key={node.name}
-				className="w-full flex align-middle hover:bg-gray-100 cursor-pointer"
+				className={`w-full flex align-middle hover:bg-gray-100 cursor-pointer ${
+					node.ext === '.json' || node.type === 'directory'
+						? 'cursor-pointer'
+						: 'cursor-not-allowed text-gray-400'
+				}`}
 				onClick={() => {
 					if (node.type === 'directory') handleOpenDirectory(node)
-					else router.push(node.path)
+					else if (node.ext === '.json') router.push(node.path)
+				}}
+				style={{
+					pointerEvents:
+						node.ext === '.json' || node.type === 'directory' ? 'auto' : 'none',
 				}}
 			>
 				{/* Open triangle */}
